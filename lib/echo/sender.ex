@@ -1,16 +1,16 @@
 defmodule Echo.Sender do
   @sender_name :sender
 
-  def start_sender(clients, input, output) do
+  def sender(clients, input, output) do
     receive do
       {:register, receiver} ->
         send receiver, {:message, input.()}
-        start_sender([receiver | clients], input, output)
+        sender([receiver | clients], input, output)
     end
   end
 
   def start(input, output) do
-   sender_pid = spawn(Echo.Sender, :start_sender, [[], input, output])
+   sender_pid = spawn(Echo.Sender, :sender, [[], input, output])
    :global.register_name(@sender_name, sender_pid)
   end
 
